@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+    <title>Population</title>
+{% endblock page_title %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/assets/vendor/charts/chartist-bundle/chartist.css">
+{% endblock custom_css %}
+
+{% block main_content %}
+            <div class="container-fluid  dashboard-content">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">인구 분포 차트 (2015년 ~ 2019년)</h5>
+                            <div class="card-body">
+                                <div class="ct-chart-line ct-golden-section"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endblock main_content %}
+
+{% block custom_js %}
+    <script src="/static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <script src="/static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
+    <script src="/static/assets/vendor/charts/chartist-bundle/Chartistjs.js"></script>
+    <script src="/static/assets/libs/js/main-js.js"></script>
+{% endblock custom_js %}

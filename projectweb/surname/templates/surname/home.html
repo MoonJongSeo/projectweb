@@ -18,7 +18,7 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Basic Form</h5>
+                            <h5 class="card-header">검색란</h5>
                             <div class="card-body">
                                 <form>
                                     <div class="form-group">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="card">
-                            <h5 class="card-header">Bordered Table</h5>
+                            <h5 class="card-header">선택란</h5>
                             <div class="card-body">
                                 <table id="search_surname_table" class="table table-bordered">
                                     <thead>
@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
                         <div class="card">
-                            <h5  class="card-header">Striped Table</h5>
+                            <h5  class="card-header">출력란</h5>
                             <div class="card-body">
                                 <table id="surname_detail_table" class="table table-striped">
                                     <thead>
@@ -68,10 +68,9 @@
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                 <div class="card">
-                    <h5 class="card-header">Stacked Bar Chart</h5>
+                    <h5 id="chart-name" class="card-header">차트</h5>
                     <div class="card-body">
-                        <!-- <div class="ct-chart-scatter-bar ct-golden-section"></div> -->
-                        <canvas id="single_bar_chart"></canvas>
+                        <div class="ct-chart-scatter-bar ct-golden-section"></div>
                     </div>
                 </div>
             </div>
@@ -86,6 +85,7 @@
     <script src="/static/assets/vendor/custom-js/jquery.multi-select.html"></script>
     <script src="/static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
     <script src="/static/assets/vendor/charts/chartist-bundle/Chartistjs.js"></script>
+    <script src="/static/assets/vendor/charts/custom-chart/surname_bar.js"></script>
     <script src="/static/assets/libs/js/main-js.js"></script>
 
     <script type="text/javascript">
@@ -167,20 +167,22 @@
             "method": "GET",
             "dataType": "json",
             "success": function(data, status, xhr) {
-                //$('#company_card_title').text(data[0].name);
+                $('#chart-name').text(data[0].sur + " " + data[0].name + '의 인구 분포');
                 $('#surname_detail_table tbody').empty();
-                
+                var chart_labels = []
+                var chart_total = []
                 for (var idx = 0; idx < data.length; idx++) { 
                     var tr = $(detail_tr_html_str);   // 테이블 행 만들기
                     tr.attr('data-symbol', data[idx].name) // 테이블 행에 데이터 저장
+                    chart_labels.push(data[idx].region.toString())
+                    chart_total.push(data[idx].total.toString())
                     var tds = tr.find('td'); // tr 하위의 td 목록 찾기
                     tds.each(function(i, td) { // python enumerate
                         $(td).text(data[idx][detail_td_names[i]])
                     });
                     $('#surname_detail_table tbody').append(tr); // 위에서 만든 행을 테이블에 추가
-
-                    show_chart(data)
                 }
+                show_bar_chart(chart_labels, [chart_total])
             },
             "error": function(xhr, status, err) {
                 alert(err);
@@ -188,92 +190,25 @@
         })
     });
 
-    function show_chart(data) {
-        var labels = []
-        var total_list = []
-        for (var i = 0; i < data.length; i++) {
-            labels.push(data[i][2]);
-            total_list.push(data[i][3]);
-        }
-
-        show_bar_chart(labels, [total_list]);
-    }
-
-    // var bar_chart = null;
-    // function show_bar_chart(labels, series) {
-    //     if ($('.ct-chart-scatter-bar').length) {
-    //         new Chartist.Bar('.ct-chart-scatter-bar', {
-    //             // labels: ['Q1', 'Q2', 'Q3', 'Q4'],
-    //             // series: [
-    //             //     [800000, 1200000, 1400000, 1300000],
-    //             //     [200000, 400000, 500000, 300000],
-    //             //     [100000, 200000, 400000, 600000]
-    //             // ]
-    //         }, {
-    //             stackBars: true,
-    //             axisY: {
-                    
-    //             }
-    //         }).on('draw', function(data) {
-    //             if (data.type === 'bar') {
-    //                 data.element.attr({
-    //                     style: 'stroke-width: 30px'
-    //                 });
-    //             }
-    //         });
-    //     }
-    // }
-
     var bar_chart = null;
-    function show_bar_chart(labels, datasets) {
-        var ctx = $("#single_bar_chart");
-        if (ctx) {
-            ctx.height = 150;
-
-            if (bar_chart) {
-                bar_chart.destroy();
-            }
-
-            var bar_chart = new Chart(ctx, {
-                // type: 'bar',
-                // data: {
-                // labels: labels,
-                // datasets: [
-                //     {
-                //     label: "인구 분포",
-                //     data: datasets,
-                //     borderColor: "rgba(0, 123, 255, 0.9)",
-                //     borderWidth: "0",
-                //     backgroundColor: "rgba(0, 123, 255, 0.5)"
-                //     }
-                // ]
-                // },
-                // options: {
-                // legend: {
-                //     position: 'top',
-                //     labels: {
-                //     fontFamily: 'Poppins'
-                //     }
-
-                // },
-                // scales: {
-                //     xAxes: [{
-                //     ticks: {
-                //         fontFamily: "Poppins"
-
-                //     }
-                //     }],
-                //     yAxes: [{
-                //     ticks: {
-                //         beginAtZero: true,
-                //         fontFamily: "Poppins"
-                //     }
-                //     }]
-                // }
-                // }
+    function show_bar_chart(labels, series) {
+        if ($('.ct-chart-scatter-bar').length) {
+            new Chartist.Bar('.ct-chart-scatter-bar', {
+                labels: labels,
+                series: series
+            }, {
+                stackBars: true,
+                axisY: {
+                    
+                }
+            }).on('draw', function(data) {
+                if (data.type === 'bar') {
+                    data.element.attr({
+                        style: 'stroke-width: 30px'
+                    });
+                }
             });
         }
     }
-    
     </script>
 {% endblock custom_js %}

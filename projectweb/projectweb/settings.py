@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     
     # custom-apps
     'surname.apps.SurnameConfig',
+    'population.apps.PopulationConfig',
 ]
 
 MIDDLEWARE = [
