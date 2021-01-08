@@ -1,0 +1,279 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+    <title>Surname</title>
+{% endblock page_title %}
+
+{% block custom_css %}
+    <link rel="stylesheet" href="/static/assets/vendor/datepicker/tempusdominus-bootstrap-4.css" />
+    <link rel="stylesheet" href="/static/assets/vendor/inputmask/css/inputmask.css" />
+    <link rel="stylesheet" href="/static/assets/vendor/charts/chartist-bundle/chartist.css">
+{% endblock custom_css %}
+
+{% block main_content %}
+            <div class="container-fluid  dashboard-content">
+                <!-- ============================================================== -->
+                <!-- pageheader -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Basic Form</h5>
+                            <div class="card-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="inputText3" class="col-form-label">Input Text</label>
+                                        <div class="card-body border-top">
+                                            <input id="inputText" type="text" class="form-control btn" />
+                                            <a id="btn_search" class="btn btn-outline-primary">Primary</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5 class="card-header">Bordered Table</h5>
+                            <div class="card-body">
+                                <table id="search_surname_table" class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">성</th>
+                                            <th scope="col">본관</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-12">
+                        <div class="card">
+                            <h5  class="card-header">Striped Table</h5>
+                            <div class="card-body">
+                                <table id="surname_detail_table" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">성씨</th>
+                                            <th scope="col">본관</th>
+                                            <th scope="col">지역</th>
+                                            <th scope="col">인구</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="card">
+                    <h5 class="card-header">Stacked Bar Chart</h5>
+                    <div class="card-body">
+                        <!-- <div class="ct-chart-scatter-bar ct-golden-section"></div> -->
+                        <canvas id="single_bar_chart"></canvas>
+                    </div>
+                </div>
+            </div>
+{% endblock main_content %}
+
+{% block custom_js %}
+    <!-- Optional JavaScript -->
+    <script src="/static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="/static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="/static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
+    <script src="/static/assets/vendor/inputmask/js/jquery.inputmask.bundle.js"></script>
+    <script src="/static/assets/vendor/custom-js/jquery.multi-select.html"></script>
+    <script src="/static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
+    <script src="/static/assets/vendor/charts/chartist-bundle/Chartistjs.js"></script>
+    <script src="/static/assets/libs/js/main-js.js"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        $.ajax({
+            "url": "/surname/",
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+
+            },
+            "error": function(xhr, status, err) {}
+        })
+    });
+
+    list_td_names = ['name', 'sur'];
+    list_tr_html_str = `<tr>
+                        <td></td>
+                        <td></td>
+                        </tr>`;
+
+    
+    $('#btn_search').on('click', function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var key = $('#inputText').val(); // 입력한 검색어 읽기
+
+        if (!key) {
+            alert('검색어를 입력하세요');
+            return;
+        }
+        key = key.replace('씨', '')
+
+        // alert(key);
+        $.ajax({
+            "url": "/surname/search/" + key,
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+                
+                $('#search_surname_table tbody').empty() // 기존의 TR 태그 제거
+
+                for (var idx = 0; idx < data.length; idx++) { 
+                    var tr = $(list_tr_html_str);   // 테이블 행 만들기
+                    tr.attr('data-symbol', data[idx].sur + ' ' + data[idx].name) // 테이블 행에 데이터 저장
+                    var tds = tr.find('td'); // tr 하위의 td 목록 찾기
+                    tds.each(function(i, td) { // python enumerate
+                        $(td).text(data[idx][list_td_names[i]])
+                    });
+                    $('#search_surname_table tbody').append(tr); // 위에서 만든 행을 테이블에 추가
+                }
+
+            }, 
+            "error": function(xhr, status, err) {
+                alert(err);
+            }
+        });
+    });
+
+    detail_td_names = ['name', 'sur', 'region', 'total'];
+    detail_tr_html_str = `<tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        </tr>`;
+
+    $('#search_surname_table').on('click', 'tr', function(event) { // id가 search_surname_table인 테이블의 tr 태그에 이벤트 연결
+        
+        event.preventDefault();
+        event.stopPropagation();
+
+        var symbol = $(this).attr('data-symbol');
+
+        $.ajax({
+            "url": "/surname/detail/" + symbol,
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+                //$('#company_card_title').text(data[0].name);
+                $('#surname_detail_table tbody').empty();
+                
+                for (var idx = 0; idx < data.length; idx++) { 
+                    var tr = $(detail_tr_html_str);   // 테이블 행 만들기
+                    tr.attr('data-symbol', data[idx].name) // 테이블 행에 데이터 저장
+                    var tds = tr.find('td'); // tr 하위의 td 목록 찾기
+                    tds.each(function(i, td) { // python enumerate
+                        $(td).text(data[idx][detail_td_names[i]])
+                    });
+                    $('#surname_detail_table tbody').append(tr); // 위에서 만든 행을 테이블에 추가
+
+                    show_chart(data)
+                }
+            },
+            "error": function(xhr, status, err) {
+                alert(err);
+            }
+        })
+    });
+
+    function show_chart(data) {
+        var labels = []
+        var total_list = []
+        for (var i = 0; i < data.length; i++) {
+            labels.push(data[i][2]);
+            total_list.push(data[i][3]);
+        }
+
+        show_bar_chart(labels, [total_list]);
+    }
+
+    // var bar_chart = null;
+    // function show_bar_chart(labels, series) {
+    //     if ($('.ct-chart-scatter-bar').length) {
+    //         new Chartist.Bar('.ct-chart-scatter-bar', {
+    //             // labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+    //             // series: [
+    //             //     [800000, 1200000, 1400000, 1300000],
+    //             //     [200000, 400000, 500000, 300000],
+    //             //     [100000, 200000, 400000, 600000]
+    //             // ]
+    //         }, {
+    //             stackBars: true,
+    //             axisY: {
+                    
+    //             }
+    //         }).on('draw', function(data) {
+    //             if (data.type === 'bar') {
+    //                 data.element.attr({
+    //                     style: 'stroke-width: 30px'
+    //                 });
+    //             }
+    //         });
+    //     }
+    // }
+
+    var bar_chart = null;
+    function show_bar_chart(labels, datasets) {
+        var ctx = $("#single_bar_chart");
+        if (ctx) {
+            ctx.height = 150;
+
+            if (bar_chart) {
+                bar_chart.destroy();
+            }
+
+            var bar_chart = new Chart(ctx, {
+                // type: 'bar',
+                // data: {
+                // labels: labels,
+                // datasets: [
+                //     {
+                //     label: "인구 분포",
+                //     data: datasets,
+                //     borderColor: "rgba(0, 123, 255, 0.9)",
+                //     borderWidth: "0",
+                //     backgroundColor: "rgba(0, 123, 255, 0.5)"
+                //     }
+                // ]
+                // },
+                // options: {
+                // legend: {
+                //     position: 'top',
+                //     labels: {
+                //     fontFamily: 'Poppins'
+                //     }
+
+                // },
+                // scales: {
+                //     xAxes: [{
+                //     ticks: {
+                //         fontFamily: "Poppins"
+
+                //     }
+                //     }],
+                //     yAxes: [{
+                //     ticks: {
+                //         beginAtZero: true,
+                //         fontFamily: "Poppins"
+                //     }
+                //     }]
+                // }
+                // }
+            });
+        }
+    }
+    
+    </script>
+{% endblock custom_js %}
