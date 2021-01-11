@@ -26,3 +26,13 @@ class SearchFutureView(View):
         searched_population = repository.select_pop_future_by_name(2000)
         json_population = json.dumps(searched_population, ensure_ascii=False)
         return HttpResponse(json_population, content_type="application/json")
+
+class SearchAgeView(View):
+    def get(self, request, key):
+        from .population_repository import PopulationRepository
+        import json
+
+        repository = PopulationRepository()
+        searched_population = repository.select_age_gender_by_region(key)
+        json_population = json.dumps(searched_population, ensure_ascii=False)
+        return HttpResponse(json_population, content_type="application/json")

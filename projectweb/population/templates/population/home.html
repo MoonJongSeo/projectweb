@@ -28,6 +28,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Stacked Bar </h5>
+                            <div class="card-body">
+                                <div id="c3chart_stacked"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 {% endblock main_content %}
 
@@ -73,7 +83,9 @@
                     var chart = c3.generate({
                         bindto: "#c3chart_spline",
                         data: {
+                            x: 'x',
                             columns: [
+                                ['x', '2015-01-01', '2016-01-01', '2017-01-01', '2018-01-01', '2019-01-01'],
                                 man, woman
                             ],
                             type: 'spline',
@@ -86,10 +98,12 @@
                         axis: {
                             y: {
                                 show: true,
-
-
                             },
                             x: {
+                                type: 'timeseries',
+                                tick: {
+                                    format: "%Y년"
+                                 },
                                 show: true,
                             }
                         }
@@ -98,6 +112,7 @@
             },
             "error": function(xhr, status, err) {}
         })
+
         // population_future(15년 ~ 67년)
         $.ajax({
             "url": "/population/search/future/2000",
@@ -130,13 +145,8 @@
 
                         },
                         axis: {
-
                             y: {
                                 show: true
-
-
-
-
                             },
                             x: {
                                 show: true
@@ -144,6 +154,84 @@
                         }
 
                     });
+                }
+            },
+            "error": function(xhr, status, err) {}
+        })
+
+        // age_gender
+        $.ajax({
+            "url": "/population/search/age/전국",
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+
+                var age = ['x']
+                var man = ['남자']
+                var woman = ['여자']
+
+                for (var idx = 1; idx < data.length; idx++) {
+                    age.push(data[idx].age)
+                    man.push(data[idx].man)
+                    woman.push(data[idx].woman * -1)
+                }
+
+                if ($('#c3chart_stacked').length) {
+                    var chart = c3.generate({
+                        bindto: "#c3chart_stacked",
+
+                        data: {
+                            columns: [
+                                man, woman,
+                            ],
+                            type: 'bar',
+                            groups: [
+                                ['data1', 'data2']
+                            ],
+                            order: 'desc', // stack order by sum of values descendantly. this is default.
+                            //      order: 'asc'  // stack order by sum of values ascendantly.
+                            //      order: null   // stack order by data definition.
+
+                            colors: {
+                                data1: '#5969ff',
+                                data2: '#ff407b',
+                                data3: '#64ced3'
+
+                            }
+                        },
+                        axis: {
+                            y: {
+                                show: true,
+                            },
+                            x: {
+                                show: true,
+                            }
+                        },
+                        grid: {
+                            y: {
+                                lines: [{ value: 0 }]
+                            }
+                        }
+                    });
+                    // setTimeout(function() {
+                    //     chart.load({
+                    //         columns: [
+                    //             ['data4', 1200, 1300, 1450, 1600, 1520, 1820],
+                    //         ]
+                    //     });
+                    // }, 1000);
+                    // setTimeout(function() {
+                    //     chart.load({
+                    //         columns: [
+                    //             ['data5', 200, 300, 450, 600, 520, 820],
+                    //         ]
+                    //     });
+                    // }, 2000);
+                    // setTimeout(function() {
+                    //     chart.groups([
+                    //         ['data1', 'data2', 'data3', 'data4', 'data5']
+                    //     ])
+                    // }, 3000);
                 }
             },
             "error": function(xhr, status, err) {}

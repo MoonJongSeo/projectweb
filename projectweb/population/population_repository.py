@@ -49,3 +49,24 @@ class PopulationRepository:
         conn.close()
 
         return result
+
+    def select_age_gender_by_region(self, region_key):
+
+        import pymysql
+
+        conn = pymysql.connect(**self.connection_info)
+        cursor = conn.cursor()
+
+        sql = "select * from age_gender where region like %s"
+        cursor.execute(sql, ("%" + region_key + "%",))
+
+        rows = cursor.fetchall() # 반환 값은 tuple의 list [ (...), (...), ..., (...) ]
+        keys = ["region", "age", "man", "woman"]
+        result = []
+        for row in rows:
+            row_dict = { key:value for key, value in zip(keys, row) }
+            result.append(row_dict)
+
+        conn.close()
+
+        return result
