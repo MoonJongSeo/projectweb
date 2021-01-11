@@ -1,20 +1,25 @@
-class SurnameRepository:
+class PopulationRepository:
 
     def __init__(self):
         self.connection_info = { 'host': 'localhost', 'db': 'projectwebdb', 'user': 'root', 'password': 'myb5370', 'charset': 'utf8' }
 
-    def select_surname_by_name(self, name_key):
+    def select_pop_past_by_name(self, name_key):
 
         import pymysql
 
         conn = pymysql.connect(**self.connection_info)
         cursor = conn.cursor()
 
-        sql = "select distinct(name), sur from surname2015 where concat(sur, ' ', name) like %s"
+        sql = "select * from population_past where region like %s"
         cursor.execute(sql, ("%" + name_key + "%",))
 
         rows = cursor.fetchall() # 반환 값은 tuple의 list [ (...), (...), ..., (...) ]
-        keys = ["name", "sur"]
+        keys = ["region"
+              , "total2015", "man2015", "woman2015"
+              , "total2016", "man2016", "woman2016"
+              , "total2017", "man2017", "woman2017"
+              , "total2018", "man2018", "woman2018"
+              , "total2019", "man2019", "woman2019"]
         result = []
         for row in rows:
             row_dict = { key:value for key, value in zip(keys, row) }
@@ -24,22 +29,18 @@ class SurnameRepository:
 
         return result
 
-    def select_detail_surname_by_name(self, name_key):
+    def select_pop_future_by_name(self, name_key):
 
         import pymysql
 
         conn = pymysql.connect(**self.connection_info)
         cursor = conn.cursor()
 
-        if len(name_key) == 5:
-            sql = "select name, sur, region, total from surname2015 where concat(sur, ' ', name) like %s and sur = '';"
-            cursor.execute(sql, ("%" + name_key + "%",))
-        else:
-            sql = "select name, sur, region, total from surname2015 where concat(sur, ' ', name) like %s"
-            cursor.execute(sql, ("%" + name_key + "%",))
+        sql = "select * from population_future where year > %s order by year asc"
+        cursor.execute(sql, (name_key))
 
         rows = cursor.fetchall() # 반환 값은 tuple의 list [ (...), (...), ..., (...) ]
-        keys = ["name", "sur", "region", "total"]
+        keys = ["year", "total", "man", "woman", "total0_14", "total15_64", "total64_"]
         result = []
         for row in rows:
             row_dict = { key:value for key, value in zip(keys, row) }

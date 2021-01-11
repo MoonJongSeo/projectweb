@@ -5,7 +5,7 @@
 {% endblock page_title %}
 
 {% block custom_css %}
-    <link rel="stylesheet" href="/static/assets/vendor/charts/chartist-bundle/chartist.css">
+    <link rel="stylesheet" href="/static/assets/vendor/charts/c3charts/c3.css">
 {% endblock custom_css %}
 
 {% block main_content %}
@@ -13,9 +13,17 @@
                 <div class="row">
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">인구 분포 차트 (2015년 ~ 2019년)</h5>
+                            <h5 class="card-header">남녀 분포 그래프 (2015년 ~ 2019년)</h5>
                             <div class="card-body">
-                                <div class="ct-chart-line ct-golden-section"></div>
+                                <div id="c3chart_spline"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">인구 예측 그래프 (2015년 ~ 2067년)</h5>
+                            <div class="card-body">
+                                <div id="c3chart_area"></div>
                             </div>
                         </div>
                     </div>
@@ -27,7 +35,119 @@
     <script src="/static/assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="/static/assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="/static/assets/vendor/slimscroll/jquery.slimscroll.js"></script>
-    <script src="/static/assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
-    <script src="/static/assets/vendor/charts/chartist-bundle/Chartistjs.js"></script>
+    <script src="/static/assets/vendor/charts/c3charts/c3.min.js"></script>
+    <script src="/static/assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
+    <!-- <script src="/static/assets/vendor/charts/c3charts/C3chartjs.js"></script> -->
     <script src="/static/assets/libs/js/main-js.js"></script>
+
+    <script type="text/javascript">
+    $(function() {
+        // population_past(15년 ~ 19년)
+        $.ajax({
+            "url": "/population/search/전국",
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+
+                var total = ['총인구']
+                var man = ['남자']
+                var woman = ['여자']
+                
+                total.push(data[0].total2015)
+                total.push(data[0].total2016)
+                total.push(data[0].total2017)
+                total.push(data[0].total2018)
+                total.push(data[0].total2019)
+                man.push(data[0].man2015)
+                man.push(data[0].man2016)
+                man.push(data[0].man2017)
+                man.push(data[0].man2018)
+                man.push(data[0].man2019)
+                woman.push(data[0].woman2015)
+                woman.push(data[0].woman2016)
+                woman.push(data[0].woman2017)
+                woman.push(data[0].woman2018)
+                woman.push(data[0].woman2019)
+
+                if ($('#c3chart_spline').length) {
+                    var chart = c3.generate({
+                        bindto: "#c3chart_spline",
+                        data: {
+                            columns: [
+                                man, woman
+                            ],
+                            type: 'spline',
+                            colors: {
+                                data1: '#5969ff',
+                                data2: '#ff407b',
+
+                            }
+                        },
+                        axis: {
+                            y: {
+                                show: true,
+
+
+                            },
+                            x: {
+                                show: true,
+                            }
+                        }
+                    });
+                }
+            },
+            "error": function(xhr, status, err) {}
+        })
+        // population_future(15년 ~ 67년)
+        $.ajax({
+            "url": "/population/search/future/2000",
+            "method": "GET",
+            "dataType": "json",
+            "success": function(data, status, xhr) {
+
+                var total = ['총인구']
+                for (var idx = 0; idx < data.length; idx++) {
+                    total.push(data[idx].total)
+                }
+                console.log(data.total)
+
+                if ($('#c3chart_area').length) {
+                    var chart = c3.generate({
+                        bindto: "#c3chart_area",
+                        data: {
+                            columns: [
+                                total
+                            ],
+                            types: {
+                                data1: 'area-spline',
+                                // data2: 'area'
+                            },
+                            colors: {
+                                data1: '#a1d53a',
+                                // data2: '#ff407b',
+
+                            }
+
+                        },
+                        axis: {
+
+                            y: {
+                                show: true
+
+
+
+
+                            },
+                            x: {
+                                show: true
+                            }
+                        }
+
+                    });
+                }
+            },
+            "error": function(xhr, status, err) {}
+        })
+    });
+    </script>
 {% endblock custom_js %}

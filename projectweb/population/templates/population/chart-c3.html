@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
  
 <head>
     <!-- Required meta tags -->
@@ -10,7 +11,7 @@
     <link href="../assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/libs/css/style.css">
     <link rel="stylesheet" href="../assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
-    <link rel="stylesheet" href="../assets/vendor/charts/chartist-bundle/chartist.css">
+    <link rel="stylesheet" href="../assets/vendor/charts/c3charts/c3.css">
     <title>Concept - Bootstrap 4 Admin Dashboard Template</title>
 </head>
 
@@ -22,7 +23,7 @@
          <!-- ============================================================== -->
         <!-- navbar -->
         <!-- ============================================================== -->
-         <div class="dashboard-header">
+       <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
                 <a class="navbar-brand" href="../index.html">Concept</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -138,7 +139,7 @@ John Abraham</h5>
         <!-- ============================================================== -->
         <!-- left sidebar -->
         <!-- ============================================================== -->
-       <div class="nav-left-sidebar sidebar-dark">
+        <div class="nav-left-sidebar sidebar-dark">
             <div class="menu-list">
                 <nav class="navbar navbar-expand-lg navbar-light">
                     <a class="d-xl-none d-lg-none" href="#">Dashboard</a>
@@ -437,14 +438,14 @@ John Abraham</h5>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">Chartist.js </h2>
+                            <h2 class="pageheader-title">C3 Charts </h2>
                             <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
                             <div class="page-breadcrumb">
                                 <nav aria-label="breadcrumb">
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
                                         <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Charts</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Chartist.js</li>
+                                        <li class="breadcrumb-item active" aria-current="page">C3 Charts</li>
                                     </ol>
                                 </nav>
                             </div>
@@ -456,226 +457,136 @@ John Abraham</h5>
                 <!-- ============================================================== -->
                 <div class="row">
                     <!-- ============================================================== -->
-                    <!-- simple line chart  -->
+                    <!--  area chart  -->
                     <!-- ============================================================== -->
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Simple Line Chart</h5>
+                            <h5 class="card-header">Area Chart</h5>
                             <div class="card-body">
-                                <div class="ct-chart-line ct-golden-section"></div>
+                                <div id="c3chart_area"></div>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end simple line chart  -->
+                    <!--  end area chart  -->
                     <!-- ============================================================== -->
                     <!-- ============================================================== -->
-                    <!-- holes in data chart  -->
+                    <!--  spline chart  -->
                     <!-- ============================================================== -->
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Holes In Data</h5>
+                            <h5 class="card-header">Spline Chart</h5>
                             <div class="card-body">
-                                <div class="ct-chart-holes ct-golden-section"></div>
+                                <div id="c3chart_spline"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- end  spline chart  -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!--  zoom chart  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Zoom Chart</h5>
+                            <div class="card-body">
+                                <div id="c3chart_zoom"></div>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end holes in data chart  -->
+                    <!--  end zoom chart  -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!--  scatter chart  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Scatter Plot</h5>
+                            <div class="card-body">
+                                <div id="c3chart_scatter"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!--  end scatter chart  -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <!-- ============================================================== -->
+                    <!--  stacked chart  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Stacked Bar </h5>
+                            <div class="card-body">
+                                <div id="c3chart_stacked"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!--  end stacked chart  -->
+                    <!-- ============================================================== -->
+                    <!-- ============================================================== -->
+                    <!--  combination chart  -->
+                    <!-- ============================================================== -->
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="card">
+                            <h5 class="card-header">Combination Chart </h5>
+                            <div class="card-body">
+                                <div id="c3chart_combine"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ============================================================== -->
+                    <!--  end combination chart  -->
                     <!-- ============================================================== -->
                 </div>
                 <div class="row">
                     <!-- ============================================================== -->
-                    <!-- whole numbers chart  -->
+                    <!-- pie chart  -->
                     <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Whole Numbers</h5>
+                            <h5 class="card-header">Pie Chart </h5>
                             <div class="card-body">
-                                <div class="ct-chart-wnumbers ct-golden-section"></div>
+                                <div id="c3chart_pie"></div>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end whole numbers charts -->
+                    <!-- end pie chart  -->
                     <!-- ============================================================== -->
                     <!-- ============================================================== -->
-                    <!-- line scatter chart  -->
+                    <!-- dount chart  -->
                     <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Line Scatter Diagram With Responsive Settings</h5>
+                            <h5 class="card-header">Donut Chart </h5>
                             <div class="card-body">
-                                <div class="ct-chart-scatter ct-golden-section"></div>
+                                <div id="c3chart_donut"></div>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end line scatter chart  -->
+                    <!-- end dount chart  -->
                     <!-- ============================================================== -->
-                </div>
-                <div class="row">
                     <!-- ============================================================== -->
-                    <!-- line chart with area  -->
+                    <!-- dount gauge  -->
                     <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Line Chart With Area</h5>
+                            <h5 class="card-header">Donut Guage </h5>
                             <div class="card-body">
-                                <div class="ct-chart-area ct-golden-section"></div>
+                                <div id="c3chart_gauge"></div>
                             </div>
                         </div>
                     </div>
                     <!-- ============================================================== -->
-                    <!-- end line chart with area  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- bi polar chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Bi-polar Line Chart With Area Only</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-polar ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end bi polar chart  -->
-                    <!-- ============================================================== -->
-                </div>
-                <div class="row">
-                    <!-- ============================================================== -->
-                    <!--stacked bar chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Stacked Bar Chart</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-scatter-bar ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!--end stacked bar chart  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!--multi line chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Multi Line Labels</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-multilines ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!--end multi line chart  -->
-                    <!-- ============================================================== -->
-                </div>
-                <div class="row">
-                    <!-- ============================================================== -->
-                    <!--multi line lables chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Multi-line Labels</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-bipolar ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end multi line lables chart  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- peak circle using the draw  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Add Peak Circles Using The Draw Events</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-events ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end peak circle using the draw  -->
-                    <!-- ============================================================== -->
-                </div>
-                <div class="row">
-                    <!-- ============================================================== -->
-                    <!-- advanced smill chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Advanced Smil Animations</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-animation ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end advanced smill chart  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- horizontal chart bar  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Horizontal Chart Bar</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-horizontal ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end horizontal chart bar  -->
-                    <!-- ============================================================== -->
-                </div>
-                <div class="row">
-                    <!-- ============================================================== -->
-                    <!-- simple pie chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Simple Pie Chart</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-pie ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end simple pie chart  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- donut chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Donut Chart Using Fill Rather Than Stroke</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-donut ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end donut chart  -->
-                    <!-- ============================================================== -->
-                    <!-- ============================================================== -->
-                    <!-- animations donut chart  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Animating A Donut With Svg.animate</h5>
-                            <div class="card-body">
-                                <div class="ct-chart-animated ct-golden-section"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end animations donut chart  -->
+                    <!-- end dount gauge  -->
                     <!-- ============================================================== -->
                 </div>
             </div>
@@ -710,8 +621,9 @@ John Abraham</h5>
     <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
     <script src="../assets/vendor/slimscroll/jquery.slimscroll.js"></script>
-    <script src="../assets/vendor/charts/chartist-bundle/chartist.min.js"></script>
-    <script src="../assets/vendor/charts/chartist-bundle/Chartistjs.js"></script>
+    <script src="../assets/vendor/charts/c3charts/c3.min.js"></script>
+    <script src="../assets/vendor/charts/c3charts/d3-5.4.0.min.js"></script>
+    <script src="../assets/vendor/charts/c3charts/C3chartjs.js"></script>
     <script src="../assets/libs/js/main-js.js"></script>
 </body>
  
