@@ -21,6 +21,23 @@
                     </div>
                     <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12 col-12">
                         <div class="card">
+                            <div class="card-body border-top">
+                                <form id=futureForm>
+                                    <h5>Inline Radio</h5>
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input id="radio01" type="radio" name="radio" checked=True class="custom-control-input"><span class="custom-control-label">1. 총인구</span>
+                                    </label>
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input id="radio02" type="radio" name="radio" class="custom-control-input"><span class="custom-control-label">2. 0 ~ 14세 </span>
+                                    </label>
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input id="radio03" type="radio" name="radio" class="custom-control-input"><span class="custom-control-label">3. 15 ~ 64세</span>
+                                    </label>
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input id="radio04" type="radio" name="radio" class="custom-control-input"><span class="custom-control-label">4. 65세 이상</span>
+                                    </label>
+                                </form>
+                            </div>
                             <h5 class="card-header">인구 예측 그래프 (2015년 ~ 2067년)</h5>
                             <div class="card-body">
                                 <div id="c3chart_area"></div>
@@ -113,6 +130,8 @@
             "error": function(xhr, status, err) {}
         })
 
+        $('input:radio[name=radio02]').is(':checked')
+
         // population_future(15년 ~ 67년)
         $.ajax({
             "url": "/population/search/future/2000",
@@ -121,10 +140,18 @@
             "success": function(data, status, xhr) {
 
                 var total = ['총인구']
+                var total0_14 = ['0 ~ 14세']
+                var total15_64 = ['15 ~ 64세']
+                var total65_ = ['65세 이상']
+
                 for (var idx = 0; idx < data.length; idx++) {
                     total.push(data[idx].total)
+                    total0_14.push(data[idx].total0_14)
+                    total15_64.push(data[idx].total15_64)
+                    total65_.push(data[idx].total65_)
                 }
-                console.log(data.total)
+
+                $('input:radio[name=radio01]').is(':checked')
 
                 if ($('#c3chart_area').length) {
                     var chart = c3.generate({
@@ -155,9 +182,53 @@
 
                     });
                 }
+
+                // $('input:radio[name="radio"]').prop("checked", false);
+
+                $('#radio01').click(function() {
+                    draw_chart_age(total)
+                });
+                $('#radio02').click(function() {
+                    draw_chart_age(total0_14)
+                });
+                $('#radio03').click(function() {
+                    draw_chart_age(total15_64)
+                });
+                $('#radio04').click(function() {
+                    draw_chart_age(total65_)
+                });
             },
             "error": function(xhr, status, err) {}
         })
+
+        function draw_chart_age(data) {
+            if ($('#c3chart_area').length) {
+                var chart = c3.generate({
+                    bindto: "#c3chart_area",
+                    data: {
+                        columns: [
+                            data
+                        ],
+                        types: {
+                            data1: 'area-spline',
+                            // data2: 'area'
+                        },
+                        colors: {
+                            data1: '#a1d53a',
+                        }
+                    },
+                    axis: {
+                        y: {
+                            show: true
+                        },
+                        x: {
+                            show: true
+                        }
+                    }
+
+                });
+            }
+        }
 
         // age_gender
         $.ajax({
@@ -188,10 +259,7 @@
                             groups: [
                                 ['data1', 'data2']
                             ],
-                            order: 'desc', // stack order by sum of values descendantly. this is default.
-                            //      order: 'asc'  // stack order by sum of values ascendantly.
-                            //      order: null   // stack order by data definition.
-
+                            order: 'desc',
                             colors: {
                                 data1: '#5969ff',
                                 data2: '#ff407b',
@@ -213,25 +281,6 @@
                             }
                         }
                     });
-                    // setTimeout(function() {
-                    //     chart.load({
-                    //         columns: [
-                    //             ['data4', 1200, 1300, 1450, 1600, 1520, 1820],
-                    //         ]
-                    //     });
-                    // }, 1000);
-                    // setTimeout(function() {
-                    //     chart.load({
-                    //         columns: [
-                    //             ['data5', 200, 300, 450, 600, 520, 820],
-                    //         ]
-                    //     });
-                    // }, 2000);
-                    // setTimeout(function() {
-                    //     chart.groups([
-                    //         ['data1', 'data2', 'data3', 'data4', 'data5']
-                    //     ])
-                    // }, 3000);
                 }
             },
             "error": function(xhr, status, err) {}

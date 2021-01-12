@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block page_title %}
+    <title>logged_out</title>
+{% endblock page_title %}
+
+{% block custom_css %}
+    <link href="/static/assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+{% endblock custom_css %}
+
+{% block main_content %}
+            <div class="container-fluid dashboard-content">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <h1 class="text-center">Logged out</h1>
+                        <h5 class="text-center">&ensp;Thanks for spending your quality time with this web site today.&ensp;</h5>
+                        <hr>
+                        <h3 class="text-center"><a href="{% url 'login' %}">Log in</a></h3>
+                    </div>
+                </div>
+            </div>
+{% endblock main_content %}
+
+{% block custom_js %}
+{% endblock custom_js %}

@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # open source apps
+    'widget_tweaks',
     
     # custom-apps
     'surname.apps.SurnameConfig',
@@ -129,3 +132,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+
+LOGIN_REDIRECT_URL = '/' # 로그인 성공했을 때 이동할 경로 -> default : /accounts/profile/

@@ -40,7 +40,7 @@ class PopulationRepository:
         cursor.execute(sql, (name_key))
 
         rows = cursor.fetchall() # 반환 값은 tuple의 list [ (...), (...), ..., (...) ]
-        keys = ["year", "total", "man", "woman", "total0_14", "total15_64", "total64_"]
+        keys = ["year", "total", "man", "woman", "total0_14", "total15_64", "total65_"]
         result = []
         for row in rows:
             row_dict = { key:value for key, value in zip(keys, row) }
